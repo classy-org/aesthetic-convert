@@ -161,7 +161,7 @@
           </span>
         </div>
         <div>
-          <label>Deviation</label>
+          <label>Maximum Deviation</label>
           <input class="control" ng-model="deviation" type="range" min="0.05" max="1.00" step="0.05" />
           <span class="value">
             {{ deviation * 100 | number:0 }}%
@@ -185,7 +185,7 @@
             <dd class="cell-value">{{ converted[$index].exact | number:2 }}</dd>
             <dt class="cell-label">Aesthetic conversion</dt>
             <dd class="cell-value">{{ converted[$index].final | number:2 }}</dd>
-            <dt class="cell-label">Maximum Deviation</dt>
+            <dt class="cell-label">Deviation</dt>
             <dd class="cell-value">{{ ((converted[$index].final - converted[$index].exact)/converted[$index].exact) * 100 | number:2 }}%</dd>
           </dl>
         </div>
