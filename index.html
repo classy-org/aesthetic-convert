@@ -185,7 +185,7 @@
             <dd class="cell-value">{{ converted[$index].exact | number:2 }}</dd>
             <dt class="cell-label">Aesthetic conversion</dt>
             <dd class="cell-value">{{ converted[$index].final | number:2 }}</dd>
-            <dt class="cell-label">Deviation</dt>
+            <dt class="cell-label">Maximum Deviation</dt>
             <dd class="cell-value">{{ ((converted[$index].final - converted[$index].exact)/converted[$index].exact) * 100 | number:2 }}%</dd>
           </dl>
         </div>
