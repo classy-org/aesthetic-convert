@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+<head>
+  <script src="dist/aesthetic-convert.compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+  <script>
+    angular.module('app', [])
+    .controller('calculatorCtrl', function($scope, $http) {
+
+      $scope.deviation = 0.15;
+
+      $http.get('http://api.fixer.io/latest?base=USD')
+      .then(function(response) {
+        $scope.rates = response.data.rates;
+      });
+
+      $scope.presets = ['', '', '', '', ''];
+
+      $scope.$watchGroup(['deviation', 'currency'], updateValues);
+      $scope.$watch('presets', updateValues, true);
+
+      function updateValues () {
+        $scope.converted = [];
+        if (!$scope.currency) return;
+        angular.forEach($scope.presets, function(preset, index) {
+          if (!preset) {
+            delete $scope.converted[index];
+            return;
+          }
+          var amount = parseInt(preset, 10);
+          var result = aesConvert(amount, $scope.currency, $scope.deviation);
+          $scope.converted[index] = {
+            exact: result.exact,
+            final: result.final
+          };
+        });
+      }
+
+    });
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,700,700i');
+    html, body {
+      background-color:#bbb;
+      margin:0;
+      font-family:'Open Sans', sans-serif;
+    }
+    main {
+      margin:0 auto;
+      max-width:800px;
+      background-color:#fff;
+      box-shadow:0 0 10px rgba(0,0,0,0.5);
+      padding:0;
+      min-height:100vh;
+      box-sizing:border-box;
+    }
+    .top {
+      background-color:#eee;
+      padding:35px;
+    }
+    h1 {
+      font-size:2rem;
+    }
+    .settings {
+      display:flex;
+      flex-direction:row;
+      width:100%;
+    }
+    .settings > div {
+      flex:1 0;
+    }
+    .control {
+      font-size:1rem;
+      font-weight:normal;
+      font-family:'Open Sans', sans-serif;
+      width:75%;
+      height:27px;
+      vertical-align:middle;
+    }
+    label {
+      display:block;
+      padding-bottom:10px;
+    }
+    .settings .value {
+      display:inline-block;
+      margin-left:10px;
+      font-style:italic;
+    }
+    .results {
+      padding: 35px;
+    }
+    .levels {
+      display:flex;
+      flex-direction:row;
+      width:100%;
+    }
+    .cell {
+      flex:1 0;
+      padding:5px;
+      box-sizing:border-box;
+    }
+    .cell-input {
+      position:relative;
+    }
+    .preset {
+      position:relative;
+      display:block;
+      font-size:1rem;
+      -webkit-appearance:none;
+      border:1px solid #ccc;
+      border-radius:3px;
+      padding:5px;
+      font-family:'Open Sans', sans-serif;
+      box-sizing:border-box;
+      width:100%;
+      padding-left:20px;
+    }
+    .cell-input:before {
+      content:'$';
+      position:absolute;
+      display:block;
+      top:0;
+      left:0;
+      bottom:0;
+      width:auto;
+      z-index:1;
+      line-height:34px;
+      vertical-align:middle;
+      font-size:1rem;
+      padding-left:8px;
+      color:darkgrey;
+    }
+    .cell-label {
+      font-size:0.7rem;
+      color:#999;
+      text-transform:uppercase;
+      margin-bottom:5px;
+    }
+    .cell-value {
+      margin:0 0 10px 10px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+<body ng-app="app" ng-controller="calculatorCtrl">
+
+  <main>
+
+    <div class="top">
+
+      <h1>Aesthetic Conversion Demo</h1>
+
+      <div class="settings">
+        <div>
+          <label>Destination Currency</label>
+          <select class="control" ng-model="currency" ng-options="value as key for (key,value) in rates">
+            <option value="">Select a currency</option>
+          </select>
+          <span class="value">
+            {{ currency | number:2 }}
+          </span>
+        </div>
+        <div>
+          <label>Deviation</label>
+          <input class="control" ng-model="deviation" type="range" min="0.05" max="1.00" step="0.05" />
+          <span class="value">
+            {{ deviation * 100 }}%
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="results">
+
+      <label>Donation presets</label>
+
+      <div class="levels">
+        <div class="cell" ng-repeat="level in [1, 2, 3, 4, 5]">
+          <div class="cell-input">
+            <input class="preset" ng-model="presets[$index]" />
+          </div>
+          <dl class="cell-result" ng-if="converted[$index]">
+            <dt class="cell-label">Exact conversion</dt>
+            <dd class="cell-value">{{ converted[$index].exact | number:2 }}</dd>
+            <dt class="cell-label">Aesthetic conversion</dt>
+            <dd class="cell-value">{{ converted[$index].final | number:2 }}</dd>
+            <dt class="cell-label">Deviation</dt>
+            <dd class="cell-value">{{ ((converted[$index].final - converted[$index].exact)/converted[$index].exact) * 100 | number:2 }}%</dd>
+          </dl>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>
