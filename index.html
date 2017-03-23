@@ -9,7 +9,7 @@
 
       $scope.deviation = 0.15;
 
-      $http.get('http://api.fixer.io/latest?base=USD')
+      $http.get('https://api.fixer.io/latest?base=USD')
       .then(function(response) {
         $scope.rates = response.data.rates;
       });
