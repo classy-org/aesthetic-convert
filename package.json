@@ -1,6 +1,6 @@
 {
   "name": "aesthetic-convert",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Aesthetically round a converted amount within a given deviation.",
   "main": "index.js",
   "scripts": {
