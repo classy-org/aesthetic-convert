@@ -1,4 +1,6 @@
-function getSpecificity (amount) {
+const MathLog10 = require('./math-log-10');
+
+module.exports = function getSpecificity (amount) {
 
   let n = -2;
   let reduced = Math.floor(amount * 100);
@@ -8,12 +10,10 @@ function getSpecificity (amount) {
     n++;
   }
 
-  if (reduced % 5 === 0 && Math.log10(reduced) > 1) {
+  if (reduced % 5 === 0 && MathLog10(reduced) > 1) {
     n++;
   }
 
   return Math.pow(10, n);
 
 }
-
-module.exports = getSpecificity;
