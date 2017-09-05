@@ -1,6 +1,12 @@
 const getMagnitude = require('./util/get-magnitude.js');
 const getSpecificity = require('./util/get-specificity.js');
 
+/* -------------------------------------------------------------------------- *
+ * Given a base amount, a conversion rate, and a maximum deviation, returns
+ * an object that includes an exact conversion and a final ("aesthetic")
+ * conversion of the base amount.
+ * -------------------------------------------------------------------------- */
+
 module.exports = function aestheticConvert (baseAmount, rate, deviation) {
   rate = rate || 0.9;
   deviation = deviation || 0.15;
